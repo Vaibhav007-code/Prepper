@@ -180,25 +180,35 @@ ALTER TABLE topics ENABLE ROW LEVEL SECURITY;
 ALTER TABLE achievements ENABLE ROW LEVEL SECURITY;
 
 -- Profiles: users can only see/edit their own
+DROP POLICY IF EXISTS "profiles_self" ON profiles;
 CREATE POLICY "profiles_self" ON profiles FOR ALL USING (auth.uid() = id);
 
 -- User progress: own data only
+DROP POLICY IF EXISTS "progress_self" ON user_progress;
 CREATE POLICY "progress_self" ON user_progress FOR ALL USING (auth.uid() = user_id);
 
 -- Daily sessions: own data only
+DROP POLICY IF EXISTS "sessions_self" ON daily_sessions;
 CREATE POLICY "sessions_self" ON daily_sessions FOR ALL USING (auth.uid() = user_id);
 
 -- Achievements: own data only
+DROP POLICY IF EXISTS "user_achievements_self" ON user_achievements;
 CREATE POLICY "user_achievements_self" ON user_achievements FOR ALL USING (auth.uid() = user_id);
 
 -- Problem log: own data only
+DROP POLICY IF EXISTS "problem_log_self" ON problem_log;
 CREATE POLICY "problem_log_self" ON problem_log FOR ALL USING (auth.uid() = user_id);
 
 -- Public curriculum data: readable by authenticated users
+DROP POLICY IF EXISTS "subjects_read" ON subjects;
 CREATE POLICY "subjects_read" ON subjects FOR SELECT USING (true);
+DROP POLICY IF EXISTS "phases_read" ON phases;
 CREATE POLICY "phases_read" ON phases FOR SELECT USING (true);
+DROP POLICY IF EXISTS "topic_groups_read" ON topic_groups;
 CREATE POLICY "topic_groups_read" ON topic_groups FOR SELECT USING (true);
+DROP POLICY IF EXISTS "topics_read" ON topics;
 CREATE POLICY "topics_read" ON topics FOR SELECT USING (true);
+DROP POLICY IF EXISTS "achievements_read" ON achievements;
 CREATE POLICY "achievements_read" ON achievements FOR SELECT USING (true);
 
 -- =============================================
@@ -206,23 +216,27 @@ CREATE POLICY "achievements_read" ON achievements FOR SELECT USING (true);
 -- =============================================
 
 -- Auto-create profile on signup
-CREATE OR REPLACE FUNCTION handle_new_user()
+CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO profiles (id, full_name, avatar_url)
+  INSERT INTO public.profiles (id, full_name, avatar_url)
   VALUES (
     NEW.id,
-    COALESCE(NEW.raw_user_meta_data->>'full_name', split_part(NEW.email, '@', 1)),
+    COALESCE(
+      NULLIF(TRIM(NEW.raw_user_meta_data->>'full_name'), ''),
+      NULLIF(split_part(COALESCE(NEW.email, ''), '@', 1), ''),
+      'User'
+    ),
     NEW.raw_user_meta_data->>'avatar_url'
   );
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
-  FOR EACH ROW EXECUTE FUNCTION handle_new_user();
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
 -- Update profile updated_at
 CREATE OR REPLACE FUNCTION update_updated_at()
@@ -233,7 +247,9 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS profiles_updated_at ON profiles;
 CREATE TRIGGER profiles_updated_at BEFORE UPDATE ON profiles
   FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+DROP TRIGGER IF EXISTS user_progress_updated_at ON user_progress;
 CREATE TRIGGER user_progress_updated_at BEFORE UPDATE ON user_progress
   FOR EACH ROW EXECUTE FUNCTION update_updated_at();

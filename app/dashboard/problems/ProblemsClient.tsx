@@ -118,37 +118,37 @@ export default function ProblemsClient({ initialProblems, userId }: Props) {
               <button className="btn btn-ghost btn-icon" onClick={() => setShowForm(false)}><X size={16} /></button>
             </div>
             <form onSubmit={handleAdd} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-              <div><label>Problem Title *</label><input id="prob-title" className="input" value={form.title} onChange={e => setForm(f => ({...f, title: e.target.value}))} placeholder="Two Sum" required /></div>
+              <div><label>Problem Title *</label><input id="prob-title" className="input" value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="Two Sum" required /></div>
               <div className="grid-2">
                 <div><label>Platform</label>
-                  <select className="input" value={form.platform} onChange={e => setForm(f => ({...f, platform: e.target.value}))} style={{ cursor: 'pointer' }}>
+                  <select className="input" value={form.platform} onChange={e => setForm(f => ({ ...f, platform: e.target.value }))} style={{ cursor: 'pointer' }}>
                     {PLATFORMS.map(p => <option key={p} value={p}>{p}</option>)}
                   </select>
                 </div>
                 <div><label>Difficulty</label>
-                  <select className="input" value={form.difficulty} onChange={e => setForm(f => ({...f, difficulty: e.target.value}))} style={{ cursor: 'pointer' }}>
+                  <select className="input" value={form.difficulty} onChange={e => setForm(f => ({ ...f, difficulty: e.target.value }))} style={{ cursor: 'pointer' }}>
                     <option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option>
                   </select>
                 </div>
               </div>
               <div className="grid-2">
                 <div><label>Status</label>
-                  <select className="input" value={form.status} onChange={e => setForm(f => ({...f, status: e.target.value}))} style={{ cursor: 'pointer' }}>
+                  <select className="input" value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))} style={{ cursor: 'pointer' }}>
                     <option value="solved">Solved</option><option value="attempted">Attempted</option><option value="revisit">Revisit</option>
                   </select>
                 </div>
                 <div><label>Pattern</label>
-                  <select className="input" value={form.pattern} onChange={e => setForm(f => ({...f, pattern: e.target.value}))} style={{ cursor: 'pointer' }}>
+                  <select className="input" value={form.pattern} onChange={e => setForm(f => ({ ...f, pattern: e.target.value }))} style={{ cursor: 'pointer' }}>
                     <option value="">None</option>
                     {PATTERNS.map(p => <option key={p} value={p}>{p}</option>)}
                   </select>
                 </div>
               </div>
               <div className="grid-2">
-                <div><label>Time (minutes)</label><input className="input" type="number" min="1" value={form.time_taken_minutes} onChange={e => setForm(f => ({...f, time_taken_minutes: e.target.value}))} placeholder="30" /></div>
-                <div><label>URL</label><input className="input" type="url" value={form.url} onChange={e => setForm(f => ({...f, url: e.target.value}))} placeholder="https://leetcode.com/..." /></div>
+                <div><label>Time (minutes)</label><input className="input" type="number" min="1" value={form.time_taken_minutes} onChange={e => setForm(f => ({ ...f, time_taken_minutes: e.target.value }))} placeholder="30" /></div>
+                <div><label>URL</label><input className="input" type="url" value={form.url} onChange={e => setForm(f => ({ ...f, url: e.target.value }))} placeholder="https://leetcode.com/..." /></div>
               </div>
-              <div><label>Notes</label><textarea className="input" rows={3} value={form.notes} onChange={e => setForm(f => ({...f, notes: e.target.value}))} placeholder="What did you learn?" style={{ resize: 'vertical' }} /></div>
+              <div><label>Notes</label><textarea className="input" rows={3} value={form.notes} onChange={e => setForm(f => ({ ...f, notes: e.target.value }))} placeholder="What did you learn?" style={{ resize: 'vertical' }} /></div>
               <button id="save-problem-btn" className="btn btn-primary" type="submit" disabled={saving}>{saving ? 'Saving...' : 'Log Problem'}</button>
             </form>
           </div>

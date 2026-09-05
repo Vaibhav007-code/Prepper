@@ -22,12 +22,12 @@ export default async function LeaderboardPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {(profiles ?? []).map((p, i) => {
             const isMe = p.id === user.id
-            const medals = ['🥇','🥈','🥉']
+            const medals = ['🥇', '🥈', '🥉']
             return (
               <div key={p.id} className="card" style={{ padding: '14px 18px', border: isMe ? '1px solid rgba(99,102,241,0.4)' : undefined, background: isMe ? 'rgba(99,102,241,0.05)' : undefined }}>
                 <div className="flex items-center gap-3">
                   <div style={{ width: 28, fontSize: 16, textAlign: 'center', flexShrink: 0 }}>
-                    {i < 3 ? medals[i] : <span style={{ fontSize: 13, color: 'var(--text-3)', fontWeight: 700 }}>#{i+1}</span>}
+                    {i < 3 ? medals[i] : <span style={{ fontSize: 13, color: 'var(--text-3)', fontWeight: 700 }}>#{i + 1}</span>}
                   </div>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontSize: 14, fontWeight: 700, color: isMe ? 'var(--accent-2)' : 'var(--text)' }}>

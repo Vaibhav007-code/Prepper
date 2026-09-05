@@ -267,7 +267,7 @@ export default function DashboardClient({ profile, subjects, completedBySubject,
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
               <span style={{ fontSize: 10, color: 'var(--text-3)' }}>Less</span>
-              {['0','1','2','3','4'].map(l => <div key={l} className="heatmap-cell" data-level={l} />)}
+              {['0', '1', '2', '3', '4'].map(l => <div key={l} className="heatmap-cell" data-level={l} />)}
               <span style={{ fontSize: 10, color: 'var(--text-3)' }}>More</span>
             </div>
           </div>
@@ -316,7 +316,7 @@ export default function DashboardClient({ profile, subjects, completedBySubject,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       flexShrink: 0,
                     }}>
-                      <span style={{ fontSize: 12, fontWeight: 900, color: s.color ?? 'var(--accent)', fontFamily: 'var(--mono)' }}>{s.title.slice(0,3).toUpperCase()}</span>
+                      <span style={{ fontSize: 12, fontWeight: 900, color: s.color ?? 'var(--accent)', fontFamily: 'var(--mono)' }}>{s.title.slice(0, 3).toUpperCase()}</span>
                     </div>
                     <div style={{
                       fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 99,
