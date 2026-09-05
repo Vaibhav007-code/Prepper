@@ -38,9 +38,15 @@ export default async function DashboardPage() {
     }
   }
 
+  const displayName = profile?.full_name
+    ?? user.user_metadata?.full_name
+    ?? user.email?.split('@')[0]
+    ?? 'Warrior'
+
   return (
     <DashboardClient
       profile={profile}
+      displayName={displayName}
       subjects={subjects ?? []}
       completedBySubject={completedBySubject}
       sessions={sessions ?? []}

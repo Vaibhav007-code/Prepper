@@ -8,6 +8,7 @@ import { format, eachDayOfInterval, subDays, isToday } from 'date-fns'
 
 interface Props {
   profile: Profile | null
+  displayName: string
   subjects: Pick<Subject, 'id' | 'title' | 'color' | 'icon' | 'order_index' | 'total_topics'>[]
   completedBySubject: Record<string, number>
   sessions: { session_date: string; xp_earned: number; topics_completed: number }[]
@@ -29,7 +30,7 @@ function getHeatLevel(count: number): string {
   return '4'
 }
 
-export default function DashboardClient({ profile, subjects, completedBySubject, sessions, totalCompleted }: Props) {
+export default function DashboardClient({ profile, displayName, subjects, completedBySubject, sessions, totalCompleted }: Props) {
   const [seeding, setSeeding] = useState(subjects.length === 0)
   const [schemaError, setSchemaError] = useState(false)
   const [seedErrorMsg, setSeedErrorMsg] = useState('')
@@ -128,7 +129,7 @@ export default function DashboardClient({ profile, subjects, completedBySubject,
               Good {getGreeting()} 👋
             </div>
             <h1 className="page-title" style={{ fontSize: 30, letterSpacing: '-0.02em' }}>
-              {(profile?.full_name ?? 'Warrior').split(' ')[0]}&apos;s Dashboard
+              {displayName.split(' ')[0]}&apos;s Dashboard
             </h1>
             <p className="page-subtitle" style={{ marginTop: 6 }}>Winter Arc in progress — stay consistent, stay sharp.</p>
           </div>
