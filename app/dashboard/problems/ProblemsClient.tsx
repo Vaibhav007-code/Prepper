@@ -25,7 +25,7 @@ export default function ProblemsClient({ initialProblems, userId }: Props) {
 
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault(); setSaving(true)
-    const { data, error } = await supabase.from('problem_log').insert({
+    const { data } = await supabase.from('problem_log').insert({
       user_id: userId, title: form.title, platform: form.platform,
       difficulty: form.difficulty as 'easy' | 'medium' | 'hard',
       pattern: form.pattern || null, status: form.status as 'solved' | 'attempted' | 'revisit',

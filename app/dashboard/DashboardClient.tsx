@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { getXPProgress } from '@/lib/seed'
 import { Profile, Subject } from '@/lib/supabase/types'
-import { Flame, Trophy, Target, BookOpen, TrendingUp, Zap, ChevronRight, Star, Activity, BarChart2, CheckCircle2, Layers } from 'lucide-react'
+import { Flame, BookOpen, TrendingUp, Zap, ChevronRight, Star, Activity, CheckCircle2, Layers } from 'lucide-react'
 import { format, eachDayOfInterval, subDays, isToday } from 'date-fns'
 
 interface Props {
@@ -30,14 +30,13 @@ function getHeatLevel(count: number): string {
 }
 
 export default function DashboardClient({ profile, subjects, completedBySubject, sessions, totalCompleted }: Props) {
-  const [seeding, setSeeding] = useState(false)
+  const [seeding, setSeeding] = useState(subjects.length === 0)
   const [schemaError, setSchemaError] = useState(false)
   const [seedErrorMsg, setSeedErrorMsg] = useState('')
   const xpData = getXPProgress(profile?.total_xp ?? 0)
 
   useEffect(() => {
     if (subjects.length === 0) {
-      setSeeding(true)
       fetch('/api/seed', { method: 'POST' })
         .then(res => res.json())
         .then((result) => {
@@ -71,7 +70,6 @@ export default function DashboardClient({ profile, subjects, completedBySubject,
   const overallProgress = totalTopics > 0 ? Math.round((totalCompleted / totalTopics) * 100) : 0
   const totalXP = profile?.total_xp ?? 0
   const streak = profile?.current_streak ?? 0
-  const todayXP = sessions.find(s => s.session_date === format(today, 'yyyy-MM-dd'))?.xp_earned ?? 0
 
   if (seeding) return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', flexDirection: 'column', gap: 20 }}>
@@ -130,7 +128,7 @@ export default function DashboardClient({ profile, subjects, completedBySubject,
               Good {getGreeting()} 👋
             </div>
             <h1 className="page-title" style={{ fontSize: 30, letterSpacing: '-0.02em' }}>
-              {(profile?.full_name ?? 'Warrior').split(' ')[0]}'s Dashboard
+              {(profile?.full_name ?? 'Warrior').split(' ')[0]}&apos;s Dashboard
             </h1>
             <p className="page-subtitle" style={{ marginTop: 6 }}>Winter Arc in progress — stay consistent, stay sharp.</p>
           </div>

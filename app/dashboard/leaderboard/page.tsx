@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { Flame, Trophy } from 'lucide-react'
+import { Flame } from 'lucide-react'
 
 export default async function LeaderboardPage() {
   const supabase = await createClient()
@@ -16,7 +16,7 @@ export default async function LeaderboardPage() {
     <div>
       <div className="page-header">
         <h1 className="page-title">Streak Board</h1>
-        <p className="page-subtitle">Who's keeping the streak alive?</p>
+        <p className="page-subtitle">Who&apos;s keeping the streak alive?</p>
       </div>
       <div className="page-body">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>

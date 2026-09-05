@@ -1,10 +1,9 @@
 'use client'
-import { useState, useOptimistic, useTransition } from 'react'
+import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Subject, Phase, TopicGroup, Topic } from '@/lib/supabase/types'
 import { ArrowLeft, ChevronDown, ChevronRight, Check, Clock, RefreshCw, Circle } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 
 type Status = 'not_started' | 'in_progress' | 'completed' | 'reviewing'
@@ -37,11 +36,11 @@ export default function SubjectClient({ subject, phases, groups, topics, progres
   const [openPhases, setOpenPhases] = useState<Set<string>>(new Set(phases.map(p => p.id)))
   const [loading, setLoading] = useState<string | null>(null)
   const supabase = createClient()
-  const router = useRouter()
 
   const totalTopics = topics.length
   const doneCount = topics.filter(t => progressMap[t.id] === 'completed').length
   const pct = totalTopics > 0 ? Math.round((doneCount / totalTopics) * 100) : 0
+  const subjectColor = subject.color ?? 'var(--accent)'
 
   async function toggleTopic(topicId: string, xpReward: number) {
     setLoading(topicId)
@@ -54,24 +53,22 @@ export default function SubjectClient({ subject, phases, groups, topics, progres
 
     const { error } = await supabase.from('user_progress').upsert({
       user_id: userId, topic_id: topicId, status: next,
-      completed_at: next === 'completed' ? now : null,
-      updated_at: now,
+      completed_at: next === 'completed' ? now : null
     }, { onConflict: 'user_id,topic_id' })
 
     if (!error && next === 'completed') {
       // Award XP + update daily session
-      await supabase.rpc('award_xp', { p_user_id: userId, p_xp: xpReward }).catch(() => null)
+      await supabase.rpc('award_xp', { p_user_id: userId, p_xp: xpReward })
       await supabase.from('daily_sessions').upsert({
         user_id: userId, session_date: today,
         topics_completed: 1, xp_earned: xpReward,
-        updated_at: now,
-      }, { onConflict: 'user_id,session_date' }).catch(() => null)
+      }, { onConflict: 'user_id,session_date' })
 
       // Show XP pop
       showXPPop(`+${xpReward} XP`)
     } else if (!error && current === 'completed') {
       // Deduct XP
-      await supabase.rpc('award_xp', { p_user_id: userId, p_xp: -xpReward }).catch(() => null)
+      await supabase.rpc('award_xp', { p_user_id: userId, p_xp: -xpReward })
     }
 
     setLoading(null)
@@ -89,7 +86,8 @@ export default function SubjectClient({ subject, phases, groups, topics, progres
   function togglePhase(phaseId: string) {
     setOpenPhases(s => {
       const n = new Set(s)
-      n.has(phaseId) ? n.delete(phaseId) : n.add(phaseId)
+      if (n.has(phaseId)) n.delete(phaseId)
+      else n.add(phaseId)
       return n
     })
   }
@@ -136,7 +134,7 @@ export default function SubjectClient({ subject, phases, groups, topics, progres
               <button onClick={() => togglePhase(phase.id)}
                 style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 18px', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font)' }}>
                 <div className="flex items-center gap-3">
-                  <div style={{ fontSize: 11, fontWeight: 800, color: subject.color, background: `${subject.color}18`, border: `1px solid ${subject.color}33`, borderRadius: 6, padding: '2px 8px', letterSpacing: '0.05em' }}>
+                  <div style={{ fontSize: 11, fontWeight: 800, color: subjectColor, background: `${subjectColor}18`, border: `1px solid ${subjectColor}33`, borderRadius: 6, padding: '2px 8px', letterSpacing: '0.05em' }}>
                     Phase {phase.code}
                   </div>
                   <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)' }}>{phase.title}</span>

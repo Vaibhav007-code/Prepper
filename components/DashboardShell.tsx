@@ -1,16 +1,12 @@
 'use client'
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Profile } from '@/lib/supabase/types'
 import { User } from '@supabase/supabase-js'
 import { getXPProgress } from '@/lib/seed'
-import { Brain, Code2, Layers, Server, Database, Cpu, Globe, GitBranch, LayoutDashboard, Sparkles, Rocket, Briefcase, BarChart2, Flame, Trophy, Menu, X, LogOut, BookOpen, ClipboardList } from 'lucide-react'
-
-const SUBJECT_ICONS: Record<string, React.FC<{size?:number;strokeWidth?:number}>> = {
-  Brain, Code2, Layers, Server, Database, Cpu, Globe, GitBranch, LayoutDashboard, Sparkles, Rocket, Briefcase
-}
+import { BarChart2, Flame, Trophy, Menu, LogOut, BookOpen, ClipboardList } from 'lucide-react'
 
 const NAV_TOP = [
   { href: '/dashboard', label: 'Dashboard', Icon: BarChart2 },
